@@ -9,12 +9,12 @@ public class Timer : MonoBehaviour
     public float waitingTime = 0;
     public bool timerIsRunning = false;
     public Slider slider;
-   // public Slider player2Slider;
+    //public Image progressBar;
     TimeSpan timeSpan;
         
     private void Start()
     {
-       
+
     }
 
     void Update()
@@ -43,6 +43,7 @@ public class Timer : MonoBehaviour
 
     void DisplayTime(float timeToDisplay) {
         slider.value = timeToDisplay;
+        //progressBar.fillAmount = timeToDisplay;
         //player2Slider.value = timeToDisplay;
 
     }

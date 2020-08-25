@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public bool canPickUp = false;// to pick ingredients
     public bool isReadyToChop = false; // acquired correct ingredients and can go towards the chopping board
     public bool canChop = false; // now player is allowed to chop as they are in chopping zome
-
+    public bool canMove = false;//stop moving while chopping and pickingIng
 
     // The speed at which the player moves
     CharacterController player;
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         player = GetComponent<CharacterController>();
+        canMove = true;
     }
 
     // Update is called once per frame
@@ -58,7 +59,8 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDir = transform.right * horizontal + transform.forward * vertical;
 
-        player.Move(moveDir * speed * Time.deltaTime);
+        if(canMove == true)
+            player.Move(moveDir * speed * Time.deltaTime);
 
 
     }
@@ -106,6 +108,7 @@ public class PlayerController : MonoBehaviour
                         }
                         // lock orders
                          hit.transform.gameObject.SetActive(false);
+                         //ordersRecived.CustomerWaiting(hasCustomer, 1);
 
                     }
 
@@ -123,6 +126,8 @@ public class PlayerController : MonoBehaviour
                         Debug.Log(this.name + "is chopping on " +hit.collider.name);
                         chopping.choppingBoardOccupied = hit.collider.gameObject;
                         chopping.StartChopping(true, pickedIng.Count);
+                        if (chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
+                            canMove = false;
                     }
 
                 }

@@ -48,10 +48,11 @@ public class IngredientsPickUp : MonoBehaviour
             }
         }
 
-        if (correctIngs.Count == pickedIng.Count)
+        if (correctIngs.Count > 0 && correctIngs.Count == pickedIng.Count)
         {
             result = true;
         }
+        
         Debug.Log(result);
         return result;
         

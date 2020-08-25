@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public enum Ingredients
@@ -13,17 +14,16 @@ public enum Ingredients
     Pepper,
     Lettuce
 }
-public class Orders : OrderSpriteCreator
+public class Orders : CommonAbstract
 {
     public List<Ingredients> saladCombo = new List<Ingredients>();
-    [SerializeField]
-    GameObject ingObjs;
     
+    int maxOrders = 2;    
     // Start is called before the first frame update
     void Start()
     {
-        
-       StartCoroutine( CreateRandomSalads(2));
+       StartCoroutine( CreateRandomSalads(maxOrders));
+       CustomerWaiting(true, maxOrders); 
     }
 
     IEnumerator CreateRandomSalads( int count)
@@ -89,6 +89,16 @@ public class Orders : OrderSpriteCreator
         Debug.Log(result);
         return result;
 
+    }
+
+    public void CustomerWaiting(bool hasPlacedOrder, int num)
+    {
+        StartTimer(hasPlacedOrder, 1, this.timer, this.slider);
+        if (this.timer.waitingTime == 0)
+        {
+            Debug.Log("Done Waiting");
+            // reduce points for players
+        }
     }
     // Update is called once per frame
     void Update()
