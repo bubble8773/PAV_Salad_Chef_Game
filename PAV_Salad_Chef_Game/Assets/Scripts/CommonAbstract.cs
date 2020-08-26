@@ -34,6 +34,10 @@ public abstract class CommonAbstract : MonoBehaviour
 
     }
 
+    public void StopTimer(Timer timer)
+    {
+        timer.waitingTime = 0;
+    }
     IEnumerator BeginTimer(bool timerCondition, int num, Timer timer, Slider slider)
     {
         if (timerCondition == true)
@@ -43,13 +47,13 @@ public abstract class CommonAbstract : MonoBehaviour
             timer.slider = slider;
             timer.slider.maxValue = timer.waitingTime;
         }
+        else {
+            Debug.Log("You dont have the right ingredients");
+            
+        }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
 
-        //if (OrderTimer.waitingTime == 0)
-        //{
-        //    Debug.Log("Times up");
-        //    //Deliver the salad
-        //}
     }
-}
+ 
+  }

@@ -16,10 +16,12 @@ public class PlayerController : MonoBehaviour
 
     public bool canPickOrder = false;//taken order from customer
     public bool hasCustomer = false;// a customer is assigned 
-    public bool canPickUp = false;// to pick ingredients
+    public bool canPickUpIng = false;// to pick ingredients
     public bool isReadyToChop = false; // acquired correct ingredients and can go towards the chopping board
     public bool canChop = false; // now player is allowed to chop as they are in chopping zome
     public bool canMove = false;//stop moving while chopping and pickingIng
+    public bool isSaladReady = false;
+
 
     // The speed at which the player moves
     CharacterController player;
@@ -31,8 +33,8 @@ public class PlayerController : MonoBehaviour
     public Transform customerAssigned;
     Orders ordersRecived;
     //Player is in Zones
-    [SerializeField]
-    Chopping chopping;
+    
+    public Chopping chopping;
 
     [SerializeField]
     IngredientsPickUp ingredientsPickedUp;
@@ -62,10 +64,11 @@ public class PlayerController : MonoBehaviour
         if(canMove == true)
             player.Move(moveDir * speed * Time.deltaTime);
 
+        RayCastUpdate();
 
     }
     
-    void FixedUpdate()
+    void RayCastUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             if (this.hasCustomer == true)
             {
-                if (canPickUp == true)
+                if (canPickUpIng == true)
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
@@ -87,6 +90,7 @@ public class PlayerController : MonoBehaviour
                     }
                     isReadyToChop = ingredientsPickedUp.GetCorectIng(customerAssigned,
                          pickedIng);
+                    Debug.Log(isReadyToChop);
                 }
             }
 
@@ -108,8 +112,7 @@ public class PlayerController : MonoBehaviour
                         }
                         // lock orders
                          hit.transform.gameObject.SetActive(false);
-                         //ordersRecived.CustomerWaiting(hasCustomer, 1);
-
+                         
                     }
 
 
@@ -125,15 +128,50 @@ public class PlayerController : MonoBehaviour
                     {
                         Debug.Log(this.name + "is chopping on " +hit.collider.name);
                         chopping.choppingBoardOccupied = hit.collider.gameObject;
-                        chopping.StartChopping(true, pickedIng.Count);
-                        if (chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
-                            canMove = false;
+                        chopping.StartChopping(isReadyToChop, pickedIng.Count,
+                            chopping.choppingBoardOccupied.GetComponent<Timer>());
+                                        
                     }
 
                 }
+                if (this.chopping.choppingBoardOccupied != null)
+                {
+                    if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
+                    {
+                        Debug.Log(this.name + "Cant Move");
+                        this.canMove = false;
+                    }
+                    else
+                    {
+                        this.canMove = true;
+                        Debug.Log(this.name + "can move and time to deliver");
+                        isSaladReady = true;
+                    }
+                }
+            }
+           
+            if (isSaladReady == true)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (this.hasCustomer == true)
+                    {
+                        Debug.Log(customerAssigned.name);
+                        if (hit.collider.name == customerAssigned.name)
+                        {
+                            ordersRecived.saladRecived = true;
+                            
+                        }
+                        if (ordersRecived.saladRecived == true)
+                        {
+                            ordersRecived.StopTimer(ordersRecived.timer);
+                            GameManager._instance.UpdateScores(ordersRecived.scoreForDelivery, this);
+                        }
+                    }
+                }
 
             }
-   
+            
         }
   
     }

@@ -17,13 +17,17 @@ public enum Ingredients
 public class Orders : CommonAbstract
 {
     public List<Ingredients> saladCombo = new List<Ingredients>();
-    
-    int maxOrders = 2;    
+    public GameObject orderHolder; // holds sprites
+    public GameObject sliderHolder; // to hold slider
+    public bool saladRecived;
+    public int scoreForDelivery = 10;
+    int maxIngs = 2;    
     // Start is called before the first frame update
     void Start()
     {
-       StartCoroutine( CreateRandomSalads(maxOrders));
-       CustomerWaiting(true, maxOrders); 
+       StartCoroutine( CreateRandomSalads(maxIngs));
+       CustomerWaiting(true,  maxIngs);
+        saladRecived = false;
     }
 
     IEnumerator CreateRandomSalads( int count)
@@ -49,17 +53,11 @@ public class Orders : CommonAbstract
                 saladCombo.Add((Ingredients)info.GetValue(index + 1));
             }
 
-            CreateSpritesForOrder(i, saladCombo[i], gameObject.transform.GetChild(0));
-            //GameObject item = Instantiate(Resources.Load<GameObject>("Prefabs/" + saladCombo[i].ToString()));
-            //item.transform.SetParent(gameObject.transform.GetChild(0));
-            //item.transform.localPosition = new Vector3(xPos, 0, 0);
-            //xPos++;
+            CreateSpritesForOrder(i, saladCombo[i], orderHolder.transform);
+            
         }
        
         yield return new WaitForSecondsRealtime(2.0f);
-
-       // Debug.Log(this.name +" Ordering.." + saladCombo[0].ToString() + " " + saladCombo[1].ToString());
-
 
     }
 
@@ -68,24 +66,25 @@ public class Orders : CommonAbstract
         bool result = false;
         List<string> correctIngs = new List<string>();
 
-        for (int i = 0; i <= pickedIng.Count - 1; i++)
-        {
-            if (pickedIng.Contains(
-                customer.GetComponent<Orders>().saladCombo[i].ToString()))
+           for (int i = 0; i <= pickedIng.Count - 1; i++)
             {
-                Debug.Log("comparing ing picked vs ing ordered");
-                correctIngs.Add(pickedIng[i]);
+                if (pickedIng.Contains(
+                    customer.GetComponent<Orders>().saladCombo[i].ToString()))
+                {
+                    Debug.Log("comparing ing picked vs ing ordered");
+                    correctIngs.Add(pickedIng[i]);
+                }
+                else
+                {
+                    result = false;
+                }
             }
-            else
-            {
-                result = false;
-            }
-        }
-
+        
         if (correctIngs.Count == pickedIng.Count)
         {
             result = true;
         }
+        
         Debug.Log(result);
         return result;
 
@@ -94,15 +93,18 @@ public class Orders : CommonAbstract
     public void CustomerWaiting(bool hasPlacedOrder, int num)
     {
         StartTimer(hasPlacedOrder, 1, this.timer, this.slider);
+        
         if (this.timer.waitingTime == 0)
         {
             Debug.Log("Done Waiting");
-            // reduce points for players
+            
+            //else reduce points for players
+
         }
     }
     // Update is called once per frame
     void Update()
     {
-        
+        GameManager._instance.ClampUIPositions(this.sliderHolder.transform.position, this.slider);
     }
 }

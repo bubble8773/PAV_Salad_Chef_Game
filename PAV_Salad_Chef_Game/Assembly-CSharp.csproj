@@ -64,9 +64,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Chopping.cs" />
     <Compile Include="Assets\Scripts\CommonAbstract.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\IngredientsPickUp.cs" />
     <Compile Include="Assets\Scripts\OrderPickUp.cs" />
-    <Compile Include="Assets\Scripts\OrderSpriteCreator.cs" />
     <Compile Include="Assets\Scripts\Orders.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />

@@ -20,13 +20,13 @@ public class IngredientsPickUp : MonoBehaviour
     {
         Debug.Log("entered ingredient pickup zone");
         //PlayerController._instance.canPickUp = true;
-        other.GetComponent<PlayerController>().canPickUp = true;
+        other.GetComponent<PlayerController>().canPickUpIng = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
         // PlayerController._instance.canPickUp = false;
-        other.GetComponent<PlayerController>().canPickUp = false;
+        other.GetComponent<PlayerController>().canPickUpIng = false;
     }
 
     public bool GetCorectIng(Transform customer,  List<string> pickedIng)
