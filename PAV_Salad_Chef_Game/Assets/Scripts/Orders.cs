@@ -21,6 +21,8 @@ public class Orders : CommonAbstract
     public GameObject sliderHolder; // to hold slider
     public TextMeshPro textMeshPro;
     public bool saladRecived;
+    public bool isAngry = false;
+    public bool isHappy = false;
     public int scoreForDelivery = 10;
     public int maxIngs = 2;
     // Start is called before the first frame update

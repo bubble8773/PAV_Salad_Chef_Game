@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public Text scoreTextP1; 
     public Text scoreTextP2;
 
+    public Text timeP1;
+    public Text timeP2;
+
     public PlayerController player1;
     public PlayerController player2;
 
@@ -20,8 +23,10 @@ public class GameManager : MonoBehaviour
     int scoreP1 = 0;
     int scoreP2 = 0;
 
-   public bool isGameOver = false;
+    public bool isGameOver = false;
+    public bool useMouse = false;
 
+    public List<GameObject> bonusObjs = new List<GameObject>();
     private void Awake()
     {
         _instance = this; 
@@ -29,7 +34,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        foreach(var bonus in bonusObjs)
+        {
+            bonus.SetActive(false);
+        }
+
     }
     // Update is called once per frame
     void Update()
@@ -58,18 +67,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void AddSpeed(PlayerController player, float amount)
+     public void AddSpeed(PlayerController player, float amount)
     {
         player.speed += amount;
     }
-    void AddTime(float amount) {
+
+    public void AddTime(PlayerController player, float amount) {
 
         gameObject.GetComponent<Timer>().waitingTime += amount;
     }
 
-  
+    public void CreateRandomBous()
+    {
+        int index = Random.Range(0, bonusObjs.Count - 1);
+        bonusObjs[index].SetActive(true);
+    }
     // Pauses the game
-    private void PauseGame()
+    public void PauseGame()
     {
         Time.timeScale = 0;
     }

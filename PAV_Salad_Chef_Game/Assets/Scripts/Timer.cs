@@ -10,8 +10,7 @@ public class Timer : MonoBehaviour
     public float initialTime;
     public bool timerIsRunning = false;
     public Slider slider;
-    public string message;
-
+    
     public static Timer _instance;
     private void Awake()
     {
@@ -22,6 +21,7 @@ public class Timer : MonoBehaviour
         if (slider != null)
             slider.maxValue = waitingTime;
 
+        // for chopping start when its ready to chop
         if (gameObject.name.Contains("Chopping"))
             return;
         
@@ -38,7 +38,20 @@ public class Timer : MonoBehaviour
             {
                 //calculate time
                 waitingTime -= Time.deltaTime;
-                
+                if (gameObject.name.Contains("Customer") == true && gameObject.GetComponent<Orders>() != null
+                     && gameObject.GetComponent<Orders>().saladRecived == true)
+                {
+                    if (waitingTime == (waitingTime * 0.7f) - waitingTime)
+                    {
+                        Debug.Log("Give Bonus");
+                        gameObject.GetComponent<Orders>().isHappy = true;
+                        GameManager._instance.CreateRandomBous();
+                    }
+                    else if (waitingTime == (waitingTime*0.2f) - waitingTime) {
+                        gameObject.GetComponent<Orders>().isAngry = true;
+                        gameObject.GetComponent<Orders>().textMeshPro.text = "I am angry";
+                    }
+                }
             }
             else
             {
@@ -60,11 +73,7 @@ public class Timer : MonoBehaviour
                     GameManager._instance.isGameOver = true;
                 }
 
-                if (gameObject.name.Contains("Chopping"))
-                {
-                    message = "Done Chopping";
-
-                }
+                
             }
             
         }
@@ -75,6 +84,11 @@ public class Timer : MonoBehaviour
     void DisplayTime(float timeToDisplay) {
         
         slider.value = timeToDisplay;
+        if (gameObject.name == "GameManager")
+        {
+            GameManager._instance.timeP1.text = "Player1 Time: " + timeToDisplay.ToString();
+            GameManager._instance.timeP2.text = "Player2 Time: " + timeToDisplay.ToString();
+        }
     }
 
     public void RestartTimer(float amount)

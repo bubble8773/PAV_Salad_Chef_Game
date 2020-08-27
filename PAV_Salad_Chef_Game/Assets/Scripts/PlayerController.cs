@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool isReadyToChop = false; // acquired correct ingredients and can go towards the chopping board
     public bool canChop = false; // now player is allowed to chop as they are in chopping zome
     public bool canMove = false;//stop moving while chopping and pickingIng
-    public bool isSaladReady = false;
+    public bool isSaladReady = false; // Done Chopping
     
     // The speed at which the player moves
     CharacterController player;
@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     {
         player = GetComponent<CharacterController>();
         canMove = true;
-        message = "Go take orders";
+        message = "Take orders";
         textMeshPro.text = message;
     }
 
@@ -71,9 +71,33 @@ public class PlayerController : MonoBehaviour
         if (canMove == true)
             player.Move(moveDir * speed * Time.deltaTime);
 
-        RayCastUpdate();
-        //KeyboardPickup();
-        
+        if (GameManager._instance.useMouse == true)
+        {
+            RayCastUpdate();
+        }
+        else {
+            KeyboardPickup();
+        }
+
+        if (ordersRecived != null)
+        {
+            if (ordersRecived.isHappy == true)
+            {
+                if (GameManager._instance.bonusObjs[0].activeInHierarchy == true)
+                {
+                    if (GameManager._instance.bonusObjs[0].name.Contains("Speed"))
+                    {
+                        //check for player collision
+                        //GameManager._instance.AddSpeed(this, 10.0f);
+                    }
+                    if (GameManager._instance.bonusObjs[0].name.Contains("Time"))
+                    {
+                        //check for player collision
+                        //GameManager._instance.AddTime(this, 10.0f);
+                    }
+                }
+            }
+        }
     }
 
     void RayCastUpdate()
@@ -128,56 +152,60 @@ public class PlayerController : MonoBehaviour
                     }
                     isReadyToChop = ingredientsPickedUp.GetCorectIng(customerAssigned,
                          pickedIng);
-                    Debug.Log(isReadyToChop);
+                    //Debug.Log(isReadyToChop);
+                    textMeshPro.text = "";
                 }
             }
 
-            if (isReadyToChop == true)
+            if (hasCustomer == true)
             {
-                if (canChop == true)
+                if (isReadyToChop == true)
                 {
-                    textMeshPro.text = "Start Chooping";
+                    if (canChop == true)
+                    {
+                        textMeshPro.text = "Start Chopping";
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            textMeshPro.text = "";
+                            if (hit.collider.tag == "ChoppingBoards")
+                            {
+                                Debug.Log(this.name + "is chopping on " + hit.collider.name);
+                                textMeshPro.text = "Chopping" + pickedIng[0] + " then" + pickedIng[1];
+                                chopping.choppingBoardOccupied = hit.collider.gameObject;
+                                chopping.StartChopping(pickedIng.Count,
+                                chopping.choppingBoardOccupied.GetComponent<Timer>());
+
+                            }
+
+                        }
+                        if (this.chopping.choppingBoardOccupied != null)
+                        {
+                            if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
+                            {
+                                // Debug.Log(this.name + "Cant Move");
+                                this.canMove = false;
+                            }
+                            else
+                            {
+                                this.canMove = true;
+                                textMeshPro.text = "Done Chopping. Deliver it to " + customerAssigned.name;
+                                isSaladReady = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {    // trash Ingredients         
                     if (Input.GetMouseButtonDown(0))
                     {
-                        textMeshPro.text = "";
-                        if (hit.collider.tag == "ChoppingBoards")
-                        {
-                            Debug.Log(this.name + "is chopping on " + hit.collider.name);
-                            textMeshPro.text = "Chopping" + pickedIng[0] + " then" + pickedIng[1];
-                            chopping.choppingBoardOccupied = hit.collider.gameObject;
-                            chopping.StartChopping(pickedIng.Count,
-                            chopping.choppingBoardOccupied.GetComponent<Timer>());
-                            
-                        }
-                        
-                    }
-                    if (this.chopping.choppingBoardOccupied != null)
-                    {
-                        if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
-                        {
-                           // Debug.Log(this.name + "Cant Move");
-                            this.canMove = false;
-                        }
-                        else
-                        {
-                            this.canMove = true;
-                            textMeshPro.text = "Done Chopping. Deliver it to " +customerAssigned.name;
-                            isSaladReady = true;
+                        if (hit.collider.tag == "TrashCan")
+                        {   //Debug.Log("Pick the correct Ingredients");
+                            textMeshPro.text = "Pick the correct Ingredients";
+                            pickedIng.Clear();
                         }
                     }
-                }
-            }
-            else
-            {    // trash Ingredients         
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (hit.collider.tag == "TrashCan")
-                    {   //Debug.Log("Pick the correct Ingredients");
-                        //textMeshPro.text = "Pick the correct Ingredients";
-                        pickedIng.Clear();
-                    }
-                }
 
+                }
             }
             if (isSaladReady == true)
             {
@@ -221,10 +249,12 @@ public class PlayerController : MonoBehaviour
                 {
                     if (canPickOrder == true)
                     {
+                        textMeshPro.text = "Press " + pickupKey.ToString();
                         if (Input.GetKeyDown(pickupKey))
                         {
                             customerAssigned = obj.transform.parent;
-                            Debug.Log(this.name + " has taken order from " + customerAssigned.name);
+                            //Debug.Log(this.name + " has taken order from " + customerAssigned.name);
+                            textMeshPro.text = "Taking Orders from " + customerAssigned.name;
                             hasCustomer = true;
                             ordersRecived = customerAssigned.GetComponent<Orders>();
 
@@ -234,8 +264,8 @@ public class PlayerController : MonoBehaviour
                                     orderHolder.transform);
                             }
                            // lock orders
-
-                            ordersRecived.orderHolder.SetActive(false);
+                           ordersRecived.orderHolder.SetActive(false);
+                            textMeshPro.text = "";
                         }
 
                     }
@@ -246,65 +276,75 @@ public class PlayerController : MonoBehaviour
                 {
                     if (this.hasCustomer == true && canPickUpIng == true)
                     {
+                        textMeshPro.text = "Press " + pickupKey.ToString();
                         if (Input.GetKeyDown(pickupKey))
                         {
-                            Debug.Log(this.name + " has picked Up " + obj.pickUpName);
+                            //Debug.Log(this.name + " has picked Up " + obj.pickUpName);
                             if (pickedIng.Count < ordersRecived.saladCombo.Count)
                                 pickedIng.Add(obj.pickUpName);
+                            textMeshPro.text = "Picking " + obj.pickUpName;
                         }
-
+                        isReadyToChop = ingredientsPickedUp.GetCorectIng(customerAssigned,
+                         pickedIng);
+                        
+                        textMeshPro.text = "";
                     }
                 }
 
-                if (isReadyToChop == true)
+                if (hasCustomer == true)
                 {
-                    if (obj.tag == "ChoppingBoards")
+                    if (isReadyToChop == true)
                     {
-                        if (canChop == true)
+                        if (obj.tag == "ChoppingBoards")
                         {
-                            if (Input.GetKeyDown(chopKey))
+                            if (canChop == true)
                             {
-                                Debug.Log(this.name + "is chopping on " + obj.name);
-                                chopping.choppingBoardOccupied = obj.gameObject;
-                                chopping.StartChopping(pickedIng.Count,
-                                    chopping.choppingBoardOccupied.GetComponent<Timer>());
+                                textMeshPro.text = "Press " + chopKey.ToString();
+                                if (Input.GetKeyDown(chopKey))
+                                {
+                                    Debug.Log(this.name + "is chopping on " + obj.name);
+                                    chopping.choppingBoardOccupied = obj.gameObject;
+                                    chopping.StartChopping(pickedIng.Count,
+                                        chopping.choppingBoardOccupied.GetComponent<Timer>());
+                                    textMeshPro.text = "Chopping";
+                                }
 
                             }
 
-                        }
-
-                        if (this.chopping.choppingBoardOccupied != null)
-                        {
-                            if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
+                            if (this.chopping.choppingBoardOccupied != null)
                             {
-                                Debug.Log(this.name + "Cant Move");
-                                this.canMove = false;
-                            }
-                            else
-                            {
-                                this.canMove = true;
-                                Debug.Log(this.name + "can move and time to deliver");
-                                isSaladReady = true;
+                                if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
+                                {
+                                    Debug.Log(this.name + "Cant Move");
+                                    this.canMove = false;
+                                }
+                                else
+                                {
+                                    this.canMove = true;
+                                    //Debug.Log(this.name + "can move and time to deliver");
+                                    textMeshPro.text = "Done chopping. Deliver to " + customerAssigned.name;
+                                    isSaladReady = true;
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    Debug.Log("trash the Ingredients");
-                    if (Input.GetKeyDown(KeyCode.Delete))
+                    else
                     {
-                        if (obj.tag == "TrashCan")
+                        Debug.Log("trash the Ingredients");
+                        if (Input.GetKeyDown(KeyCode.Delete))
                         {
-                            Debug.Log("Pick the correct Ingredients");
-                            pickedIng.Clear();
+                            if (obj.tag == "TrashCan")
+                            {
+                                Debug.Log("Pick the correct Ingredients");
+                                pickedIng.Clear();
+                            }
                         }
+
                     }
-
                 }
-
                 if (isSaladReady == true && this.hasCustomer == true)
                 {
+                    textMeshPro.text = "Press " + placeKey.ToString();
                     if (Input.GetKeyDown(placeKey))
                     {
                         Debug.Log(customerAssigned.name);
@@ -320,7 +360,7 @@ public class PlayerController : MonoBehaviour
                             GameManager._instance.UpdateScores(ordersRecived.scoreForDelivery, this);
                             ordersRecived.saladRecived = false;
                             pickedIng.Clear();
-
+                            textMeshPro.text = "done";
                         }
 
                     }
