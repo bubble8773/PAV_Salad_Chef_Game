@@ -39,7 +39,7 @@ public class IngredientsPickUp : MonoBehaviour
             if (pickedIng.Contains(
                 customer.GetComponent<Orders>().saladCombo[i].ToString()))
             {
-                Debug.Log("comparing ing picked vs ing ordered");
+                Debug.Log("comparing ing picked vs ing's ordered");
                 correctIngs.Add(pickedIng[i]);
             }
             else
@@ -48,12 +48,12 @@ public class IngredientsPickUp : MonoBehaviour
             }
         }
 
-        if (correctIngs.Count > 0 && correctIngs.Count == pickedIng.Count)
+        if (correctIngs.Count > 0)
         {
             result = true;
         }
         
-        Debug.Log(result);
+       // Debug.Log(result);
         return result;
         
     }

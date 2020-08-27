@@ -34,24 +34,23 @@ public class Chopping : CommonAbstract
         player.canChop = false;
     }
 
-    public void StartChopping(bool allowedToChop, int num, Timer timer)
+    public void StartChopping(int num, Timer timer)
     {
+        timer.waitingTime *= num;
+        timer.timerIsRunning = true;
         if (choppingBoardOccupied.name.Contains("_1"))
         {
-            slider = GameObject.Find("ChoppingSlider1").GetComponent<Slider>();
-            GameManager._instance.ClampUIPositions(sliderHolders[0].transform.position, slider);
-            
+            timer.slider = GameObject.Find("ChoppingSlider1").GetComponent<Slider>();
+            GameManager._instance.ClampUIPositions(sliderHolders[0].transform.position, timer.slider);
+
         }
 
         if (choppingBoardOccupied.name.Contains("_2"))
         {
-            slider = GameObject.Find("ChoppingSlider2").GetComponent<Slider>();
-            GameManager._instance.ClampUIPositions(sliderHolders[1].transform.position, slider);
+            timer.slider = GameObject.Find("ChoppingSlider2").GetComponent<Slider>();
+            GameManager._instance.ClampUIPositions(sliderHolders[1].transform.position,timer.slider);
         }
-        
-        timer = choppingBoardOccupied.GetComponent<Timer>();
-        StartTimer(allowedToChop, num, timer, slider);
-        
+
     }
 
     
