@@ -316,6 +316,8 @@ MonoBehaviour:
   sliderHolder: {fileID: 1130910057306025215}
   textMeshPro: {fileID: 1130910058542876146}
   saladRecived: 0
+  isAngry: 0
+  isHappy: 0
   scoreForDelivery: 10
   maxIngs: 2
   timer: {fileID: 1130910057909330667}
@@ -335,6 +337,9 @@ MonoBehaviour:
   initialTime: 60
   timerIsRunning: 1
   slider: {fileID: 0}
+  dummySprite1: {fileID: 0}
+  dummySprite2: {fileID: 0}
+  dummyButton: {fileID: 0}
 --- !u!114 &1130910057909330664
 MonoBehaviour:
   m_ObjectHideFlags: 0

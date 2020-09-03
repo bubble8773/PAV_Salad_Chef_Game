@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
     public float initialTime;
     public bool timerIsRunning = false;
     public Slider slider;
-    
+
     public static Timer _instance;
     private void Awake()
     {
@@ -26,7 +26,8 @@ public class Timer : MonoBehaviour
             return;
         
             timerIsRunning = true;
-          
+        
+
     }
 
     void Update()
@@ -60,11 +61,12 @@ public class Timer : MonoBehaviour
                 timerIsRunning = false;
                 if (gameObject.name.Contains("Customer"))
                 {
-                    
                     GameManager._instance.UpdateScores(-2, GameManager._instance.player1);
                     GameManager._instance.UpdateScores(-2, GameManager._instance.player2);
                     gameObject.GetComponent<Orders>().saladCombo.Clear();
+                    gameObject.GetComponent<Orders>().StartCreatingNextRandomOrders(2);
                     RestartTimer(2.0f);
+                    
                 }
 
                 if (gameObject.name == "GameManager")

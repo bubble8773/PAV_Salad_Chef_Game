@@ -60,6 +60,10 @@ public class PlayerController : MonoBehaviour
         textMeshPro.text = message;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.name);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -124,6 +128,8 @@ public class PlayerController : MonoBehaviour
                         {
                             ordersRecived.CreateSpritesForOrder(i, ordersRecived.saladCombo[i],
                                 orderHolder.transform);
+                            //ordersRecived.ChangeSprites(orderHolder.transform.GetChild(i).GetComponent<SpriteRenderer>(),
+                            //    ordersRecived.orderHolder.transform.GetChild(i).GetComponent<SpriteRenderer>());
                         }
                         // lock orders
                         hit.transform.gameObject.SetActive(false);

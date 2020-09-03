@@ -25,6 +25,8 @@ public class Orders : CommonAbstract
     public bool isHappy = false;
     public int scoreForDelivery = 10;
     public int maxIngs = 2;
+
+    public GameObject ingObjs;    
     // Start is called before the first frame update
     public Timer timer;
     void Start()
@@ -45,6 +47,10 @@ public class Orders : CommonAbstract
     public void StartCreatingRandomOrders(int count)
     {
         StartCoroutine(CreateRandomSalads(maxIngs));
+    }
+    public void StartCreatingNextRandomOrders(int count)
+    {
+        StartCoroutine(CreateNextRandomSalads(maxIngs));
     }
 
     IEnumerator CreateRandomSalads( int count)
@@ -78,7 +84,45 @@ public class Orders : CommonAbstract
 
     }
 
-    
+    IEnumerator CreateNextRandomSalads(int count)
+    {
+        for (int i = 0; i <= count - 1; i++)
+        {
+            var info = System.Enum.GetValues(typeof(Ingredients));
+            //Debug.Log(info.Length - 1);
+            int index = Random.Range(0, info.Length - 1);
+            //Debug.Log(index);
+            if (!saladCombo.Contains((Ingredients)info.GetValue(index)))
+            {
+                saladCombo.Add((Ingredients)info.GetValue(index));
+            }
+            else
+            {
+                if (index > 0 && index == 6)
+                    index--;
+                else if (index == 0)
+                    index++;
+
+                saladCombo.Add((Ingredients)info.GetValue(index + 1));
+            }
+
+        }
+
+        for (int j = 0; j <= ingObjs.transform.childCount - 1; j++) {
+
+            for (int k = 0; k <= count - 1; k++)
+            {
+                if (ingObjs.transform.GetChild(j).name.Contains(saladCombo[k].ToString()))
+                {
+                    ChangeSprites(orderHolder.transform.GetChild(k).GetComponent<SpriteRenderer>()
+                        , ingObjs.transform.GetChild(j).GetComponent<SpriteRenderer>());
+                }
+            }
+        }
+        yield return new WaitForSecondsRealtime(2.0f);
+
+    }
+
     public void CustomerWaiting(bool hasPlacedOrder, int num)
     {
         textMeshPro.text = "Waiting";

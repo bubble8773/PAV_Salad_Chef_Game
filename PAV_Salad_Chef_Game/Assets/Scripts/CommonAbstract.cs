@@ -25,6 +25,10 @@ public abstract class CommonAbstract : MonoBehaviour
 
     }
 
+    public void ChangeSprites(SpriteRenderer spritetoChange, SpriteRenderer fromSprite)
+    {
+        spritetoChange.sprite = fromSprite.sprite;
+    }
     
     public void StopTimer(Timer timer)
     {
