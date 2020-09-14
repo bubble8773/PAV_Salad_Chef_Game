@@ -77,7 +77,7 @@ public class Orders : CommonAbstract
             }
 
             CreateSpritesForOrder(i, saladCombo[i], orderHolder.transform);
-            
+            orderHolder.SetActive(true);
         }
        
         yield return new WaitForSecondsRealtime(2.0f);
@@ -107,6 +107,7 @@ public class Orders : CommonAbstract
             }
 
         }
+        orderHolder.SetActive(true);
 
         for (int j = 0; j <= ingObjs.transform.childCount - 1; j++) {
 

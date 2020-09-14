@@ -53,6 +53,8 @@ public class Timer : MonoBehaviour
                         gameObject.GetComponent<Orders>().textMeshPro.text = "I am angry";
                     }
                 }
+                GameManager._instance.timeP1.text = "Player1 Time: " + waitingTime.ToString();
+                GameManager._instance.timeP2.text = "Player2 Time: " + waitingTime.ToString();
             }
             else
             {

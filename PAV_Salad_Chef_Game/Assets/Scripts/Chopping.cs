@@ -34,9 +34,8 @@ public class Chopping : CommonAbstract
         player.canChop = false;
     }
 
-    public void StartChopping(int num, Timer timer)
+    public void StartChopping( Timer timer)
     {
-        timer.waitingTime *= num;
         timer.timerIsRunning = true;
         if (choppingBoardOccupied.name.Contains("_1"))
         {

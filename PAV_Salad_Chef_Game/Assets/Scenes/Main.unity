@@ -151,7 +151,7 @@ Transform:
   m_LocalScale: {x: 0.12580794, y: 0.09893002, z: 0.13962613}
   m_Children: []
   m_Father: {fileID: 347869359}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &12475474
 MeshRenderer:
@@ -651,7 +651,7 @@ Transform:
   m_LocalScale: {x: 0.004545454, y: 0.005, z: 0.0045454535}
   m_Children: []
   m_Father: {fileID: 347869359}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &79083778
 GameObject:
@@ -818,7 +818,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2aa6ab62866ce4439ab7303f7da55e51, type: 3}
+  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -837,10 +837,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102381882}
   m_LocalRotation: {x: 0.7071068, y: 0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0009867623}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0009867661}
   m_LocalScale: {x: 0.0032577522, y: 0.003970144, z: 0.004999999}
   m_Children: []
-  m_Father: {fileID: 1685625459}
+  m_Father: {fileID: 347869359}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &112122070
@@ -1943,9 +1943,9 @@ Transform:
   m_LocalPosition: {x: -0.025473237, y: -0.0007116352, z: 0.024903249}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 102381884}
   - {fileID: 12475473}
   - {fileID: 65073202}
-  - {fileID: 1685625459}
   m_Father: {fileID: 1610725392}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4758,6 +4758,7 @@ MonoBehaviour:
   verticalKey: Vertical1
   pickupKey: 101
   placeKey: 113
+  deliverKey: 0
   chopKey: 99
   trashKey: 27
   canPickOrder: 0
@@ -4903,6 +4904,7 @@ GameObject:
   - component: {fileID: 867122425}
   - component: {fileID: 867122424}
   - component: {fileID: 867122426}
+  - component: {fileID: 867122427}
   m_Layer: 0
   m_Name: TrashCan1
   m_TagString: TrashCan
@@ -4981,11 +4983,24 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867122422}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.0103835715, y: 0.011367751, z: 0.017398074}
   m_Center: {x: 0.0000000114087015, y: -0.000000007450581, z: -0.000000001396984}
+--- !u!114 &867122427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867122422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2142aee8e4f3234b87e38d7d9059654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickUpName: 
 --- !u!1 &877962942
 GameObject:
   m_ObjectHideFlags: 0
@@ -6052,7 +6067,8 @@ MonoBehaviour:
   horizontalKey: Horizontal
   verticalKey: Vertical
   pickupKey: 303
-  placeKey: 13
+  placeKey: 307
+  deliverKey: 13
   chopKey: 305
   trashKey: 127
   canPickOrder: 0
@@ -7800,6 +7816,7 @@ GameObject:
   - component: {fileID: 1440047938}
   - component: {fileID: 1440047937}
   - component: {fileID: 1440047939}
+  - component: {fileID: 1440047940}
   m_Layer: 0
   m_Name: TrashCan2
   m_TagString: TrashCan
@@ -7870,20 +7887,32 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440047935}
   m_Mesh: {fileID: 4300072, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
---- !u!64 &1440047939
-MeshCollider:
+--- !u!65 &1440047939
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440047935}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300072, guid: ec40b66161fcdf5458ccee83032f58c3, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.0103835715, y: 0.011367751, z: 0.017398074}
+  m_Center: {x: 0.0000000114087015, y: -0.000000007450581, z: -0.000000001396984}
+--- !u!114 &1440047940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440047935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2142aee8e4f3234b87e38d7d9059654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickUpName: 
 --- !u!1 &1442682662
 GameObject:
   m_ObjectHideFlags: 0
@@ -8860,37 +8889,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 270952644}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1685625458
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1685625459}
-  m_Layer: 0
-  m_Name: IngPlaceSpriteTransform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1685625459
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685625458}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 102381884}
-  m_Father: {fileID: 347869359}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1687039447
 GameObject:
