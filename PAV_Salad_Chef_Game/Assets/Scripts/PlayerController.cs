@@ -3,20 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     // Key Inputs name which will be varying depends on the player 
     public string horizontalKey = "Horizontal";
     public string verticalKey = "Vertical";
 
-    //// Input keys
-    public KeyCode pickupKey;
-    public KeyCode placeKey;
-    public KeyCode deliverKey;
-    public KeyCode chopKey;
-    public KeyCode trashKey;
-
+    
     public bool canPickOrder = false;//taken order from customer
     public bool hasCustomer = false;// a customer is assigned 
     public bool canPickUpIng = false;// to pick ingredients
@@ -25,10 +18,6 @@ public class PlayerController : MonoBehaviour
     public bool canMove = false;//stop moving while chopping and pickingIng
     public bool isSaladReady = false; // Done Chopping
     
-    // The speed at which the player moves
-    CharacterController player;
-    public float speed;
-
     [SerializeField]
     List<string> pickedIng = new List<string>();
     
@@ -48,8 +37,11 @@ public class PlayerController : MonoBehaviour
     public static PlayerController _instance;
     // Start is called before the first frame update
     public string message = "";
+    public float speed;
     int keyCount;
+    
 
+    public CharacterController player;
     private void Awake()
     {
         _instance = this;
@@ -61,7 +53,7 @@ public class PlayerController : MonoBehaviour
         player = GetComponent<CharacterController>();
         canMove = true;
         message = "Take orders";
-        textMeshPro.text = message;
+
         keyCount = 0;
     }
 
@@ -84,11 +76,8 @@ public class PlayerController : MonoBehaviour
         {
             RayCastUpdate();
         }
-        else {
-            KeyboardPickup();
-        }
 
-        if (ordersRecived != null)
+      if (ordersRecived != null)
         {
             if (ordersRecived.isHappy == true)
             {
@@ -247,168 +236,6 @@ public class PlayerController : MonoBehaviour
 
         }
      
-    }
-
-    void KeyboardPickup()
-    {
-        foreach (var obj in pickupObjects)
-        {
-            if (obj.pickUpName.Length > 0)
-            {
-                if (obj.tag == "Orders")
-                {
-                    if (canPickOrder == true)
-                    {
-                        textMeshPro.text = "Press " + pickupKey.ToString();
-                        if (Input.GetKeyDown(pickupKey))
-                        {
-                            customerAssigned = obj.transform.parent;
-                            //Debug.Log(this.name + " has taken order from " + customerAssigned.name);
-                            textMeshPro.text = "Taking Orders from " + customerAssigned.name;
-                            hasCustomer = true;
-                            ordersRecived = customerAssigned.GetComponent<Orders>();
-
-                            for (int i = 0; i <= ordersRecived.saladCombo.Count - 1; i++)
-                            {
-                                ordersRecived.CreateSpritesForOrder(i, ordersRecived.saladCombo[i],
-                                    orderHolder.transform);
-                            }
-                           // lock orders
-                           ordersRecived.orderHolder.SetActive(false);
-                            textMeshPro.text = "";
-                        }
-
-                    }
-
-                }
-
-                if (obj.tag == "Ingredients")
-                {
-                    if (this.hasCustomer == true && canPickUpIng == true)
-                    {
-                        //textMeshPro.text = "Press " + pickupKey.ToString();
-                        if (Input.GetKeyDown(pickupKey))
-                        {
-                            //Debug.Log(this.name + " has picked Up " + obj.pickUpName);
-                            if (pickedIng.Count < ordersRecived.saladCombo.Count)
-                                pickedIng.Add(obj.pickUpName);
-                            textMeshPro.text = "Picking " + obj.pickUpName;
-                        }
-                        isReadyToChop = ingredientsPickedUp.GetCorectIng(customerAssigned,
-                         pickedIng);
-                        
-                        textMeshPro.text = "";
-                    }
-                }
-
-                if (hasCustomer == true)
-                {
-                    if (isReadyToChop == true)
-                    {
-                        if (obj.tag == "ChoppingBoards")
-                        {
-                            if (canChop == true)
-                            {
-                                textMeshPro.text = "Press " + placeKey.ToString()+ " then press " + chopKey.ToString() 
-                                                + "to begin chopping";
-                                if (Input.GetKeyDown(placeKey))
-                                {
-                                    keyCount++;
-                                    
-                                    Debug.Log(this.name + "is chopping on " + obj.name);
-                                    chopping.choppingBoardOccupied = obj.gameObject;
-                                    chopping.ChangeSprites(chopping.choppingBoardOccupied.transform.GetChild(0)
-                                        .GetComponent<SpriteRenderer>(), orderHolder.transform.GetChild(keyCount - 1).
-                                        GetComponent<SpriteRenderer>());
-                                    
-                                    
-                                    
-                                }
-
-                               // textMeshPro.text = "Press " + chopKey.ToString();
-                                if (Input.GetKeyDown(chopKey))
-                                {
-                                    Debug.Log(keyCount);
-                                    if (keyCount == ordersRecived.maxIngs)
-                                    {
-                                        keyCount = 0;
-                                        chopping.choppingBoardOccupied.GetComponent<Timer>().RestartTimer(0.1f);
-                                    }
-                                    chopping.StartChopping(chopping.choppingBoardOccupied.GetComponent<Timer>());
-                                    textMeshPro.text = " Chopping";
-                                   
-                                }
-
-                                
-                            }
-
-                            if (this.chopping.choppingBoardOccupied != null)
-                            {
-                                if (this.chopping.choppingBoardOccupied.GetComponent<Timer>().timerIsRunning)
-                                {
-                                    Debug.Log(this.name + " Cant Move");
-                                    this.canMove = false;
-                                }
-                                else
-                                {
-                                    this.canMove = true;
-                                    //Debug.Log(this.name + "can move and time to deliver");
-                                    textMeshPro.text = "Done chopping. Deliver to " + customerAssigned.name;
-                                    isSaladReady = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //Debug.Log("trash the Ingredients");
-                        if (Input.GetKeyDown(KeyCode.Delete))
-                        {
-                            if (obj.tag == "TrashCan")
-                            {
-                                textMeshPro.text = "Pick the correct Ingredients";
-                                pickedIng.Clear();
-                            }
-                        }
-
-                    }
-                }
-                if (isSaladReady == true && this.hasCustomer == true)
-                {
-                    textMeshPro.text = "Press " + deliverKey.ToString();
-                    if (Input.GetKeyDown(deliverKey))
-                    {
-                        Debug.Log(customerAssigned.name);
-                        if (obj.name == customerAssigned.name)
-                        {
-                            ordersRecived.saladRecived = true;
-                            textMeshPro.text = "Delivery to " + customerAssigned.name;
-                        }
-                        else {
-                            textMeshPro.text = "Wrong Customer";
-                        }
-                        if (ordersRecived.saladRecived == true)
-                        {
-                            ordersRecived.StopTimer(ordersRecived.timer);
-
-                            GameManager._instance.UpdateScores(ordersRecived.scoreForDelivery, this);
-                            ordersRecived.saladRecived = false;
-                            pickedIng.Clear();
-                            textMeshPro.text = "done";
-                        }
-
-                    }
-                    
-
-                }
-
-            }
-        }
-
-
-
-
-
     }
 
 }
